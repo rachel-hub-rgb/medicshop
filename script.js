@@ -13,24 +13,46 @@ function addItem() {
     document.getElementById("itemCategory").value;
 
     let qty =
-    document.getElementById("itemQty").value;
+    parseInt(
+        document.getElementById("itemQty").value
+    );
 
-    if(name === "" || category === "" || qty === ""){
+    if(name === "" || category === "" || !qty){
 
         alert("Please fill all fields");
 
         return;
     }
 
-    let item = {
-        name: name,
-        category: category,
-        qty: qty
-    };
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
 
-    saveItem(item);
+    let existingItem =
+    items.find(item => item.name === name);
 
-    displayItem(item);
+    if(existingItem){
+
+        existingItem.qty += qty;
+    }
+
+    else{
+
+        let item = {
+            name: name,
+            category: category,
+            qty: qty
+        };
+
+        items.push(item);
+    }
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(items)
+    );
+
+    refreshInventory();
 
     clearInputs();
 }
@@ -67,22 +89,31 @@ function displayItem(item){
 
         <p><b>Category:</b> ${item.category}</p>
 
-        <p><b>Quantity:</b> ${item.qty}</p>
+        <p><b>Quantity:</b>
+        <span id="qty-${item.name}">
+        ${item.qty}
+        </span>
+        </p>
 
         <p>${stockStatus}</p>
 
         <div class="item-buttons">
 
             <button
-            class="delete-btn"
-            onclick="deleteItem(this, '${item.name}')">
-                Delete
+            onclick="sellItem('${item.name}')">
+                Sell 1
             </button>
 
             <button
             class="edit-btn"
-            onclick="editItem('${item.name}')">
-                Edit
+            onclick="addMore('${item.name}')">
+                Add Stock
+            </button>
+
+            <button
+            class="delete-btn"
+            onclick="deleteItem('${item.name}')">
+                Delete
             </button>
 
         </div>
@@ -95,35 +126,55 @@ function displayItem(item){
     updateTotalItems();
 }
 
-function saveItem(item){
+function sellItem(itemName){
 
     let items =
     JSON.parse(localStorage.getItem("inventory"))
     || [];
 
-    items.push(item);
+    let item =
+    items.find(item => item.name === itemName);
+
+    if(item.qty > 0){
+
+        item.qty -= 1;
+    }
 
     localStorage.setItem(
         "inventory",
         JSON.stringify(items)
     );
+
+    refreshInventory();
 }
 
-function loadItems(){
+function addMore(itemName){
+
+    let amount =
+    parseInt(prompt("Add quantity:"));
+
+    if(!amount){
+        return;
+    }
 
     let items =
     JSON.parse(localStorage.getItem("inventory"))
     || [];
 
-    items.forEach(item => {
+    let item =
+    items.find(item => item.name === itemName);
 
-        displayItem(item);
-    });
+    item.qty += amount;
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(items)
+    );
+
+    refreshInventory();
 }
 
-function deleteItem(button, itemName){
-
-    button.parentElement.parentElement.remove();
+function deleteItem(itemName){
 
     let items =
     JSON.parse(localStorage.getItem("inventory"))
@@ -138,38 +189,30 @@ function deleteItem(button, itemName){
         JSON.stringify(items)
     );
 
-    totalItems--;
-
-    updateTotalItems();
+    refreshInventory();
 }
 
-function editItem(itemName){
+function loadItems(){
+
+    refreshInventory();
+}
+
+function refreshInventory(){
+
+    document.getElementById(
+        "inventoryList"
+    ).innerHTML = "";
+
+    totalItems = 0;
 
     let items =
     JSON.parse(localStorage.getItem("inventory"))
     || [];
 
-    let item =
-    items.find(item => item.name === itemName);
+    items.forEach(item => {
 
-    let newQty =
-    prompt(
-        `Enter new quantity for ${item.name}:`,
-        item.qty
-    );
-
-    if(newQty === null || newQty === ""){
-        return;
-    }
-
-    item.qty = newQty;
-
-    localStorage.setItem(
-        "inventory",
-        JSON.stringify(items)
-    );
-
-    location.reload();
+        displayItem(item);
+    });
 }
 
 function searchItem(){
