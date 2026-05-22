@@ -1,110 +1,214 @@
-body{
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #e8f5e9;
-}
+let totalItems = 0;
 
-.container{
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-}
+window.onload = function () {
+    loadItems();
+};
 
-h1{
-    text-align: center;
-    color: #1b5e20;
-}
+function addItem() {
 
-h3{
-    text-align: center;
-    color: #2e7d32;
-}
+    let name =
+    document.getElementById("itemName").value;
 
-.form-section{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
-}
+    let category =
+    document.getElementById("itemCategory").value;
 
-input{
-    flex: 1;
-    min-width: 150px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #999;
-    font-size: 16px;
-}
+    let qty =
+    document.getElementById("itemQty").value;
 
-button{
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #2e7d32;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
-}
+    if(name === "" || category === "" || qty === ""){
 
-button:hover{
-    background: #1b5e20;
-}
+        alert("Please fill all fields");
 
-.item{
-    background: white;
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
-}
-
-.item h3{
-    margin: 0;
-    color: #1b5e20;
-}
-
-.low{
-    border-left: 8px solid red;
-}
-
-.high{
-    border-left: 8px solid green;
-}
-
-.item-buttons{
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
-}
-
-.delete-btn{
-    background: #c62828;
-}
-
-.delete-btn:hover{
-    background: #8e0000;
-}
-
-.edit-btn{
-    background: #1565c0;
-}
-
-.edit-btn:hover{
-    background: #003c8f;
-}
-
-@media(max-width: 600px){
-
-    .form-section{
-        flex-direction: column;
+        return;
     }
 
-    input{
-        width: 100%;
+    let item = {
+        name: name,
+        category: category,
+        qty: qty
+    };
+
+    saveItem(item);
+
+    displayItem(item);
+
+    clearInputs();
+}
+
+function displayItem(item){
+
+    let inventory =
+    document.getElementById("inventoryList");
+
+    let itemDiv =
+    document.createElement("div");
+
+    itemDiv.classList.add("item");
+
+    let stockStatus = "";
+
+    if(item.qty <= 5){
+
+        stockStatus = "Low Stock ⚠️";
+
+        itemDiv.classList.add("low");
     }
 
-    button{
-        width: 100%;
+    else{
+
+        stockStatus = "In Stock ✅";
+
+        itemDiv.classList.add("high");
     }
+
+    itemDiv.innerHTML = `
+
+        <h3>${item.name}</h3>
+
+        <p><b>Category:</b> ${item.category}</p>
+
+        <p><b>Quantity:</b> ${item.qty}</p>
+
+        <p>${stockStatus}</p>
+
+        <div class="item-buttons">
+
+            <button
+            class="delete-btn"
+            onclick="deleteItem(this, '${item.name}')">
+                Delete
+            </button>
+
+            <button
+            class="edit-btn"
+            onclick="editItem('${item.name}')">
+                Edit
+            </button>
+
+        </div>
+    `;
+
+    inventory.appendChild(itemDiv);
+
+    totalItems++;
+
+    updateTotalItems();
+}
+
+function saveItem(item){
+
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
+
+    items.push(item);
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(items)
+    );
+}
+
+function loadItems(){
+
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
+
+    items.forEach(item => {
+
+        displayItem(item);
+    });
+}
+
+function deleteItem(button, itemName){
+
+    button.parentElement.parentElement.remove();
+
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
+
+    items = items.filter(
+        item => item.name !== itemName
+    );
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(items)
+    );
+
+    totalItems--;
+
+    updateTotalItems();
+}
+
+function editItem(itemName){
+
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
+
+    let item =
+    items.find(item => item.name === itemName);
+
+    let newQty =
+    prompt(
+        `Enter new quantity for ${item.name}:`,
+        item.qty
+    );
+
+    if(newQty === null || newQty === ""){
+        return;
+    }
+
+    item.qty = newQty;
+
+    localStorage.setItem(
+        "inventory",
+        JSON.stringify(items)
+    );
+
+    location.reload();
+}
+
+function searchItem(){
+
+    let input =
+    document.getElementById("searchInput")
+    .value.toLowerCase();
+
+    let items =
+    document.querySelectorAll(".item");
+
+    items.forEach(item => {
+
+        let text =
+        item.innerText.toLowerCase();
+
+        if(text.includes(input)){
+
+            item.style.display = "block";
+        }
+
+        else{
+
+            item.style.display = "none";
+        }
+    });
+}
+
+function updateTotalItems(){
+
+    document.getElementById("totalItems")
+    .innerText = totalItems;
+}
+
+function clearInputs(){
+
+    document.getElementById("itemName").value = "";
+
+    document.getElementById("itemCategory").value = "";
+
+    document.getElementById("itemQty").value = "";
 }
