@@ -1,8 +1,15 @@
+let totalItems = 0;
+
 function addItem() {
 
     let name = document.getElementById("itemName").value;
 
     let qty = document.getElementById("itemQty").value;
+
+    if(name === "" || qty === ""){
+        alert("Please fill all fields");
+        return;
+    }
 
     let inventory = document.getElementById("inventoryList");
 
@@ -10,15 +17,44 @@ function addItem() {
 
     itemDiv.classList.add("item");
 
+    let stockStatus = "";
+
     if(qty <= 5){
-        itemDiv.innerHTML =
-        `<b>${name}</b> - ${qty} LEFT ⚠️`;
+        stockStatus = "Low Stock ⚠️";
+        itemDiv.classList.add("low");
     }
 
     else{
-        itemDiv.innerHTML =
-        `<b>${name}</b> - ${qty} in stock`;
+        stockStatus = "In Stock ✅";
     }
 
+    itemDiv.innerHTML = `
+        <h3>${name}</h3>
+        <p>Quantity: ${qty}</p>
+        <p>${stockStatus}</p>
+
+        <button onclick="deleteItem(this)">
+            Delete
+        </button>
+    `;
+
     inventory.appendChild(itemDiv);
+
+    totalItems++;
+
+    document.getElementById("totalItems")
+    .innerText = totalItems;
+
+    document.getElementById("itemName").value = "";
+    document.getElementById("itemQty").value = "";
+}
+
+function deleteItem(button){
+
+    button.parentElement.remove();
+
+    totalItems--;
+
+    document.getElementById("totalItems")
+    .innerText = totalItems;
 }
