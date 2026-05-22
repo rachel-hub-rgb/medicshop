@@ -1,28 +1,41 @@
-body {
+body{
     font-family: Arial;
+    background: #e8f5e9;
     padding: 20 px;
-    background: #f2f2f2;
 }
 
-h1 {
-    color: darkgreen;
+h1{
+    color: #1b5e20;
 }
 
-input {
+input{
     padding: 10 px;
     margin: 5 px;
+    border-radius: 5 px;
+    border: 1 px solid gray;
 }
 
-button {
+button{
     padding: 10 px;
-    background: green;
+    background: #2e7d32;
     color: white;
     border: none;
+    border-radius: 5 px;
     cursor: pointer;
 }
 
-.item {
+button:hover{
+    background: #1b5e20;
+}
+
+.item{
     background: white;
-    padding: 10 px;
-    margin-top: 10 px;
+    padding: 15 px;
+    margin-top: 15 px;
+    border-radius: 10 px;
+    box-shadow: 0 px 2 px 5 px rgba (0,0,0,0.2);
+}
+
+.low{
+    border-left: 6 px solid red;
 }
