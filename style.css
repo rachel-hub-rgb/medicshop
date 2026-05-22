@@ -1,0 +1,28 @@
+body {
+    font-family: Arial;
+    padding: 20 px;
+    background: #f2f2f2;
+}
+
+h1 {
+    color: darkgreen;
+}
+
+input {
+    padding: 10 px;
+    margin: 5 px;
+}
+
+button {
+    padding: 10 px;
+    background: green;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.item {
+    background: white;
+    padding: 10 px;
+    margin-top: 10 px;
+}
