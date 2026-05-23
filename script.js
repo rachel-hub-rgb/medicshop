@@ -1,10 +1,12 @@
-let totalItems = 0;
+let totalSales = 0;
 
-window.onload = function () {
-    loadItems();
+window.onload = function(){
+
+    refreshInventory();
+    loadSales();
 };
 
-function addItem() {
+function addItem(){
 
     let name =
     document.getElementById("itemName").value;
@@ -13,13 +15,14 @@ function addItem() {
     document.getElementById("itemCategory").value;
 
     let qty =
-    parseInt(
-        document.getElementById("itemQty").value
-    );
+    parseInt(document.getElementById("itemQty").value);
 
-    if(name === "" || category === "" || !qty){
+    let price =
+    parseFloat(document.getElementById("itemPrice").value);
 
-        alert("Please fill all fields");
+    if(!name || !category || !qty || !price){
+
+        alert("Fill all fields");
 
         return;
     }
@@ -28,23 +31,22 @@ function addItem() {
     JSON.parse(localStorage.getItem("inventory"))
     || [];
 
-    let existingItem =
+    let existing =
     items.find(item => item.name === name);
 
-    if(existingItem){
+    if(existing){
 
-        existingItem.qty += qty;
+        existing.qty += qty;
     }
 
     else{
 
-        let item = {
-            name: name,
-            category: category,
-            qty: qty
-        };
-
-        items.push(item);
+        items.push({
+            name,
+            category,
+            qty,
+            price
+        });
     }
 
     localStorage.setItem(
@@ -57,56 +59,76 @@ function addItem() {
     clearInputs();
 }
 
+function refreshInventory(){
+
+    let inventory =
+    document.getElementById("inventoryList");
+
+    inventory.innerHTML = "";
+
+    let items =
+    JSON.parse(localStorage.getItem("inventory"))
+    || [];
+
+    let totalStock = 0;
+
+    document.getElementById("totalItems")
+    .innerText = items.length;
+
+    items.forEach(item => {
+
+        totalStock += item.qty;
+
+        displayItem(item);
+    });
+
+    document.getElementById("totalStock")
+    .innerText = totalStock;
+}
+
 function displayItem(item){
 
     let inventory =
     document.getElementById("inventoryList");
 
-    let itemDiv =
+    let div =
     document.createElement("div");
 
-    itemDiv.classList.add("item");
-
-    let stockStatus = "";
+    div.classList.add("item");
 
     if(item.qty <= 5){
 
-        stockStatus = "Low Stock ⚠️";
-
-        itemDiv.classList.add("low");
+        div.classList.add("low");
     }
 
     else{
 
-        stockStatus = "In Stock ✅";
-
-        itemDiv.classList.add("high");
+        div.classList.add("high");
     }
 
-    itemDiv.innerHTML = `
+    div.innerHTML = `
 
         <h3>${item.name}</h3>
 
-        <p><b>Category:</b> ${item.category}</p>
+        <p>Category:
+        ${item.category}</p>
 
-        <p><b>Quantity:</b>
-        <span id="qty-${item.name}">
-        ${item.qty}
-        </span>
-        </p>
+        <p>Stock:
+        ${item.qty}</p>
 
-        <p>${stockStatus}</p>
+        <p>Price:
+        ₹${item.price}</p>
 
         <div class="item-buttons">
 
             <button
             onclick="sellItem('${item.name}')">
-                Sell 1
+                Sell
             </button>
 
             <button
             class="edit-btn"
-            onclick="addMore('${item.name}')">
+            onclick="addStock('${item.name}')">
                 Add Stock
             </button>
 
@@ -119,14 +141,18 @@ function displayItem(item){
         </div>
     `;
 
-    inventory.appendChild(itemDiv);
-
-    totalItems++;
-
-    updateTotalItems();
+    inventory.appendChild(div);
 }
 
 function sellItem(itemName){
+
+    let qty =
+    parseInt(prompt("Quantity sold:"));
+
+    if(!qty || qty <= 0){
+
+        return;
+    }
 
     let items =
     JSON.parse(localStorage.getItem("inventory"))
@@ -135,10 +161,28 @@ function sellItem(itemName){
     let item =
     items.find(item => item.name === itemName);
 
-    if(item.qty > 0){
+    if(qty > item.qty){
 
-        item.qty -= 1;
+        alert("Not enough stock");
+
+        return;
     }
+
+    item.qty -= qty;
+
+    let bill =
+    qty * item.price;
+
+    totalSales += bill;
+
+    document.getElementById("totalSales")
+    .innerText = `₹${totalSales}`;
+
+    saveSale({
+        item:item.name,
+        qty,
+        bill
+    });
 
     localStorage.setItem(
         "inventory",
@@ -146,14 +190,25 @@ function sellItem(itemName){
     );
 
     refreshInventory();
+
+    alert(
+        `Bill Generated
+
+Item: ${item.name}
+
+Quantity: ${qty}
+
+Total: ₹${bill}`
+    );
 }
 
-function addMore(itemName){
+function addStock(itemName){
 
     let amount =
     parseInt(prompt("Add quantity:"));
 
     if(!amount){
+
         return;
     }
 
@@ -180,9 +235,8 @@ function deleteItem(itemName){
     JSON.parse(localStorage.getItem("inventory"))
     || [];
 
-    items = items.filter(
-        item => item.name !== itemName
-    );
+    items =
+    items.filter(item => item.name !== itemName);
 
     localStorage.setItem(
         "inventory",
@@ -192,27 +246,56 @@ function deleteItem(itemName){
     refreshInventory();
 }
 
-function loadItems(){
+function saveSale(sale){
 
-    refreshInventory();
-}
-
-function refreshInventory(){
-
-    document.getElementById(
-        "inventoryList"
-    ).innerHTML = "";
-
-    totalItems = 0;
-
-    let items =
-    JSON.parse(localStorage.getItem("inventory"))
+    let sales =
+    JSON.parse(localStorage.getItem("sales"))
     || [];
 
-    items.forEach(item => {
+    sales.push(sale);
 
-        displayItem(item);
+    localStorage.setItem(
+        "sales",
+        JSON.stringify(sales)
+    );
+
+    loadSales();
+}
+
+function loadSales(){
+
+    let sales =
+    JSON.parse(localStorage.getItem("sales"))
+    || [];
+
+    let history =
+    document.getElementById("salesHistory");
+
+    history.innerHTML = "";
+
+    sales.forEach(sale => {
+
+        let div =
+        document.createElement("div");
+
+        div.classList.add("sale-card");
+
+        div.innerHTML = `
+
+            <p>
+            Sold ${sale.qty}
+            x ${sale.item}
+            = ₹${sale.bill}
+            </p>
+        `;
+
+        history.appendChild(div);
+
+        totalSales += sale.bill;
     });
+
+    document.getElementById("totalSales")
+    .innerText = `₹${totalSales}`;
 }
 
 function searchItem(){
@@ -241,12 +324,6 @@ function searchItem(){
     });
 }
 
-function updateTotalItems(){
-
-    document.getElementById("totalItems")
-    .innerText = totalItems;
-}
-
 function clearInputs(){
 
     document.getElementById("itemName").value = "";
@@ -254,4 +331,6 @@ function clearInputs(){
     document.getElementById("itemCategory").value = "";
 
     document.getElementById("itemQty").value = "";
+
+    document.getElementById("itemPrice").value = "";
 }
