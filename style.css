@@ -1,110 +1,126 @@
 body{
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background: #e8f5e9;
+
+    margin:0;
+    padding:0;
+    font-family:Arial;
+    background:#eef5ee;
 }
 
 .container{
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
+
+    max-width:1000px;
+    margin:auto;
+    padding:20px;
 }
 
-h1{
-    text-align: center;
-    color: #1b5e20;
+h1,h2{
+
+    text-align:center;
+    color:#1b5e20;
 }
 
-h3{
-    text-align: center;
-    color: #2e7d32;
+.stats{
+
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+
+    background:white;
+    padding:20px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .form-section{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 20px;
+
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-bottom:20px;
 }
 
 input{
-    flex: 1;
-    min-width: 150px;
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #999;
-    font-size: 16px;
+
+    flex:1;
+    min-width:150px;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #999;
 }
 
 button{
-    padding: 12px 20px;
-    border: none;
-    border-radius: 8px;
-    background: #2e7d32;
-    color: white;
-    cursor: pointer;
-    font-size: 16px;
+
+    padding:12px 18px;
+    border:none;
+    border-radius:8px;
+    background:#2e7d32;
+    color:white;
+    cursor:pointer;
 }
 
 button:hover{
-    background: #1b5e20;
+
+    background:#1b5e20;
 }
 
 .item{
-    background: white;
-    margin-top: 15px;
-    padding: 15px;
-    border-radius: 12px;
-    box-shadow: 0px 2px 6px rgba(0,0,0,0.15);
-}
 
-.item h3{
-    margin: 0;
-    color: #1b5e20;
+    background:white;
+    padding:15px;
+    margin-top:15px;
+    border-radius:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
 }
 
 .low{
-    border-left: 8px solid red;
+
+    border-left:8px solid red;
 }
 
 .high{
-    border-left: 8px solid green;
+
+    border-left:8px solid green;
 }
 
 .item-buttons{
-    margin-top: 10px;
-    display: flex;
-    gap: 10px;
+
+    display:flex;
+    gap:10px;
+    margin-top:10px;
 }
 
 .delete-btn{
-    background: #c62828;
-}
 
-.delete-btn:hover{
-    background: #8e0000;
+    background:#c62828;
 }
 
 .edit-btn{
-    background: #1565c0;
+
+    background:#1565c0;
 }
 
-.edit-btn:hover{
-    background: #003c8f;
+.sale-card{
+
+    background:white;
+    padding:10px;
+    margin-top:10px;
+    border-radius:10px;
 }
 
-@media(max-width: 600px){
+@media(max-width:600px){
 
     .form-section{
-        flex-direction: column;
-    }
 
-    input{
-        width: 100%;
+        flex-direction:column;
     }
 
     button{
-        width: 100%;
+
+        width:100%;
     }
 }
