@@ -2,62 +2,87 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <title>Inventory Manager</title>
 
-    <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Inventory System</title>
+
+    <link rel="stylesheet"
+    href="style.css">
+
 </head>
 
 <body>
 
-    <div class="container">
+<div class="container">
 
-        <h1>📦 Inventory Manager</h1>
+    <h1>📦 Smart Inventory Dashboard</h1>
 
-        <h3>Total Items:
-            <span id="totalItems">0</span>
-        </h3>
+    <div class="stats">
 
-        <input
-            type="text"
-            id="searchInput"
-            placeholder="Search item..."
-            onkeyup="searchItem()"
-        >
-
-        <div class="form-section">
-
-            <input
-                type="text"
-                id="itemName"
-                placeholder="Item Name"
-            >
-
-            <input
-                type="text"
-                id="itemCategory"
-                placeholder="Category"
-            >
-
-            <input
-                type="number"
-                id="itemQty"
-                placeholder="Quantity"
-            >
-
-            <button onclick="addItem()">
-                Add Item
-            </button>
-
+        <div class="card">
+            <h2 id="totalItems">0</h2>
+            <p>Total Products</p>
         </div>
 
-        <div id="inventoryList"></div>
+        <div class="card">
+            <h2 id="totalStock">0</h2>
+            <p>Total Stock</p>
+        </div>
+
+        <div class="card">
+            <h2 id="totalSales">₹0</h2>
+            <p>Total Sales</p>
+        </div>
 
     </div>
 
-    <script src="script.js"></script>
+    <input
+    type="text"
+    id="searchInput"
+    placeholder="Search item..."
+    onkeyup="searchItem()">
+
+    <div class="form-section">
+
+        <input
+        type="text"
+        id="itemName"
+        placeholder="Item Name">
+
+        <input
+        type="text"
+        id="itemCategory"
+        placeholder="Category">
+
+        <input
+        type="number"
+        id="itemQty"
+        placeholder="Quantity">
+
+        <input
+        type="number"
+        id="itemPrice"
+        placeholder="Price">
+
+        <button onclick="addItem()">
+            Add Product
+        </button>
+
+    </div>
+
+    <div id="inventoryList"></div>
+
+    <h2>🧾 Sales History</h2>
+
+    <div id="salesHistory"></div>
+
+</div>
+
+<script src="script.js"></script>
 
 </body>
 </html>
