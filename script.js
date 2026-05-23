@@ -110,13 +110,13 @@ function displayItem(item){
 
         <h3>${item.name}</h3>
 
-        <p>Category:
+        <p><b>Category:</b>
         ${item.category}</p>
 
-        <p>Stock:
+        <p><b>Stock:</b>
         ${item.qty}</p>
 
-        <p>Price:
+        <p><b>Price:</b>
         ₹${item.price}</p>
 
         <div class="item-buttons">
@@ -173,11 +173,6 @@ function sellItem(itemName){
     let bill =
     qty * item.price;
 
-    totalSales += bill;
-
-    document.getElementById("totalSales")
-    .innerText = `₹${totalSales}`;
-
     saveSale({
         item:item.name,
         qty,
@@ -190,6 +185,8 @@ function sellItem(itemName){
     );
 
     refreshInventory();
+
+    loadSales();
 
     alert(
         `Bill Generated
@@ -258,8 +255,6 @@ function saveSale(sale){
         "sales",
         JSON.stringify(sales)
     );
-
-    loadSales();
 }
 
 function loadSales(){
@@ -273,7 +268,13 @@ function loadSales(){
 
     history.innerHTML = "";
 
-    sales.forEach(sale => {
+    totalSales = 0;
+
+    let labels = [];
+
+    let data = [];
+
+    sales.forEach((sale,index) => {
 
         let div =
         document.createElement("div");
@@ -292,10 +293,59 @@ function loadSales(){
         history.appendChild(div);
 
         totalSales += sale.bill;
+
+        labels.push(`Sale ${index+1}`);
+
+        data.push(sale.bill);
     });
 
     document.getElementById("totalSales")
     .innerText = `₹${totalSales}`;
+
+    createChart(labels,data);
+}
+
+function createChart(labels,data){
+
+    let ctx =
+    document.getElementById("salesChart");
+
+    if(window.salesChartInstance){
+
+        window.salesChartInstance.destroy();
+    }
+
+    window.salesChartInstance =
+    new Chart(ctx,{
+
+        type:"bar",
+
+        data:{
+
+            labels:labels,
+
+            datasets:[{
+
+                label:"Sales Revenue",
+
+                data:data,
+
+                borderWidth:1
+            }]
+        },
+
+        options:{
+
+            responsive:true,
+
+            scales:{
+
+                y:{
+                    beginAtZero:true
+                }
+            }
+        }
+    });
 }
 
 function searchItem(){
@@ -326,11 +376,11 @@ function searchItem(){
 
 function clearInputs(){
 
-    document.getElementById("itemName").value = "";
+    document.getElementById("itemName").value="";
 
-    document.getElementById("itemCategory").value = "";
+    document.getElementById("itemCategory").value="";
 
-    document.getElementById("itemQty").value = "";
+    document.getElementById("itemQty").value="";
 
-    document.getElementById("itemPrice").value = "";
+    document.getElementById("itemPrice").value="";
 }
