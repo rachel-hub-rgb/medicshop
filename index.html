@@ -3,15 +3,16 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>Smart Inventory System</title>
+<title>Smart Inventory Dashboard</title>
 
-    <link rel="stylesheet"
-    href="style.css">
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
@@ -19,66 +20,70 @@
 
 <div class="container">
 
-    <h1>📦 Smart Inventory Dashboard</h1>
+<h1>📦 Smart Inventory Dashboard</h1>
 
-    <div class="stats">
+<div class="stats">
 
-        <div class="card">
-            <h2 id="totalItems">0</h2>
-            <p>Total Products</p>
-        </div>
+<div class="card">
+<h2 id="totalItems">0</h2>
+<p>Total Products</p>
+</div>
 
-        <div class="card">
-            <h2 id="totalStock">0</h2>
-            <p>Total Stock</p>
-        </div>
+<div class="card">
+<h2 id="totalStock">0</h2>
+<p>Total Stock</p>
+</div>
 
-        <div class="card">
-            <h2 id="totalSales">₹0</h2>
-            <p>Total Sales</p>
-        </div>
+<div class="card">
+<h2 id="totalSales">₹0</h2>
+<p>Total Sales</p>
+</div>
 
-    </div>
+</div>
 
-    <input
-    type="text"
-    id="searchInput"
-    placeholder="Search item..."
-    onkeyup="searchItem()">
+<input
+type="text"
+id="searchInput"
+placeholder="Search item..."
+onkeyup="searchItem()">
 
-    <div class="form-section">
+<div class="form-section">
 
-        <input
-        type="text"
-        id="itemName"
-        placeholder="Item Name">
+<input
+type="text"
+id="itemName"
+placeholder="Item Name">
 
-        <input
-        type="text"
-        id="itemCategory"
-        placeholder="Category">
+<input
+type="text"
+id="itemCategory"
+placeholder="Category">
 
-        <input
-        type="number"
-        id="itemQty"
-        placeholder="Quantity">
+<input
+type="number"
+id="itemQty"
+placeholder="Quantity">
 
-        <input
-        type="number"
-        id="itemPrice"
-        placeholder="Price">
+<input
+type="number"
+id="itemPrice"
+placeholder="Price">
 
-        <button onclick="addItem()">
-            Add Product
-        </button>
+<button onclick="addItem()">
+Add Product
+</button>
 
-    </div>
+</div>
 
-    <div id="inventoryList"></div>
+<div id="inventoryList"></div>
 
-    <h2>🧾 Sales History</h2>
+<h2>📈 Sales Analytics</h2>
 
-    <div id="salesHistory"></div>
+<canvas id="salesChart"></canvas>
+
+<h2>🧾 Sales History</h2>
+
+<div id="salesHistory"></div>
 
 </div>
 
